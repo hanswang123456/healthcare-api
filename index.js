@@ -11,7 +11,7 @@ import userRoute from "./routes/user.js";
 import cors from "cors";
 
 const app = express();
-const port = process.env.port || 8080;
+const port = process.env.PORT || 80;
 
 app.use(cors());
 app.use(express.json());
@@ -41,7 +41,7 @@ app.get("/", (req, res) => {
   res.send("first request");
 });
 
-app.listen(80, () => {
+app.listen(port, () => {
   connect();
   console.log("Listening on 80");
 });
