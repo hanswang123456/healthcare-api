@@ -41,7 +41,7 @@ app.get("/", (req, res) => {
   res.send("first request");
 });
 
-app.listen(WEBSITES_PORT, () => {
+app.listen(8080, () => {
   connect();
   console.log("Listening on 8080");
 });
