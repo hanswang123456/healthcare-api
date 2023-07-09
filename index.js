@@ -11,6 +11,8 @@ import userRoute from "./routes/user.js";
 import cors from "cors";
 
 const app = express();
+const port = process.env.port || 8080;
+
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
@@ -39,7 +41,7 @@ app.get("/", (req, res) => {
   res.send("first request");
 });
 
-app.listen(SERVER_PORT, () => {
+app.listen(port, () => {
   connect();
   console.log("Listening on 8080");
 });
