@@ -12,6 +12,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  OTP: {
+    type: String,
+  },
+  OTPEXP: {
+    type: String,
+  },
   name: {
     type: String,
     required: true,

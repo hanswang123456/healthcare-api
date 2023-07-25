@@ -25,17 +25,13 @@ const router = express.Router();
 router.get("/:id", getDoctor); // verifyUser
 
 //update
-router.put("/:id", updateDoctor); // verifyUser
+router.put("/:id", verifyUser, updateDoctor); // verifyUser
 
 //delete
-router.delete("/:id", verifyUser, deleteDoctor);
+router.delete("/:id", deleteDoctor);
 
 //getall
 router.get("/", getDoctors);
-
-router.get("/", (req, res) => {
-  res.send("this is the auth endpoint");
-});
 
 router.get("/register", (req, res) => {
   res.send("this is the auth register endpoint");

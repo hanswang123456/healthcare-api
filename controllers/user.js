@@ -41,14 +41,3 @@ export const deleteUser = async (req, res, next) => {
     next(err);
   }
 };
-
-export const getHospital = async (req, res, next) => {
-  try {
-    const locate = await axios.get(
-      "https://api.mapbox.com/geocoding/v5/mapbox.places/hospital.json?proximity=ip&access_token=pk.eyJ1IjoiaDQzd2FuZyIsImEiOiJjbGowbnZvNnEweHV1M2RxbDcwcmd6aTcwIn0.jZDHjVxj0f5m_-VokUEvyA"
-    );
-    res.status(200).json(locate);
-  } catch (err) {
-    next(err);
-  }
-};
