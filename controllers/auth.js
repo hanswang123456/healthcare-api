@@ -135,7 +135,7 @@ export const getHospital = async (req, res, next) => {
   try {
     await axios
       .get(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/hospital.json?proximity=ip&access_token=${MAP_TOKEN}`
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/hospital.json?proximity=ip&access_token=${process.env.MAP_TOKEN}`
       )
       .then((response) => {
         res.send(response.data); // <= send data to the client
