@@ -8,6 +8,7 @@ import axios from "axios";
 
 export const register = async (req, res, next) => {
   try {
+    // hash password with salt
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.password, salt);
 
@@ -21,6 +22,7 @@ export const register = async (req, res, next) => {
         password: hash,
       });
 
+      // add to db
       await newUser.save();
       res.status(200).send("User has been created.");
     }
@@ -30,11 +32,13 @@ export const register = async (req, res, next) => {
 };
 export const login = async (req, res, next) => {
   try {
+    //search for user in db
     const user = await User.findOne({ username: req.body.username });
     if (!user) {
       return next(createError(404, "User not found!"));
     }
 
+    // compare password
     const isPasswordCorrect = await bcrypt.compare(
       req.body.password,
       user.password
@@ -42,6 +46,7 @@ export const login = async (req, res, next) => {
     if (!isPasswordCorrect)
       return next(createError(400, "Wrong password or username!"));
 
+    // set one time password
     OTP(user._id, user.email);
 
     const token = jwt.sign(
@@ -64,15 +69,18 @@ export const login = async (req, res, next) => {
 };
 
 export const authenticate = async (req, res, next) => {
+  //find the user again using username
   try {
     const user = await User.findOne({ username: req.body.username });
     if (!user) {
       return next(createError(404, "User not found!"));
     }
 
+    // confirm mfa
     if (req.body.code != user.OTP || new Date() >= new Date(user.OTPEXP))
       return next(createError(405, "MFA Failed"));
 
+    // set up JWT again
     const token = jwt.sign(
       { id: user._id, isAdmin: user.isAdmin },
       process.env.JWT
@@ -94,6 +102,7 @@ export const authenticate = async (req, res, next) => {
 
 const OTP = async (_id, email, res) => {
   try {
+    //get random code
     const CODE = Math.floor(100000 + Math.random() * 900000);
     let config = {
       service: "gmail",
@@ -103,8 +112,10 @@ const OTP = async (_id, email, res) => {
       },
     };
 
+    //send with nodemailer
     const transporter = nodemailer.createTransport(config);
 
+    // set OTP
     const updatedUser = await User.findByIdAndUpdate(
       _id,
       {
@@ -115,8 +126,6 @@ const OTP = async (_id, email, res) => {
       },
       { new: true }
     );
-
-    // res.status(200).json(updatedUser);
 
     const mailOptions = {
       from: process.env.MAIL_SOURCE,
@@ -131,6 +140,7 @@ const OTP = async (_id, email, res) => {
   }
 };
 
+// find nearby hospitals with IP
 export const getHospital = async (req, res, next) => {
   try {
     await axios
